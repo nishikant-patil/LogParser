@@ -1,5 +1,5 @@
 Hello world-start
-java.lang.ArithmeticException: / by zero
+java.lang.NullPointerException: null
 	at foo.bar.Main.main(Main.java:8)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12,7 +12,7 @@ java.lang.ArithmeticException: / by zero
 Hello world-end
 
 Hello world-start
-java.lang.Exception: / by zero
+java.lang.NullPointerException: null
 	at foo.bar.Main.main(Main.java:8)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)

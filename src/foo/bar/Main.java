@@ -10,7 +10,7 @@ public class Main {
 
     private static Pattern expNamePattern = Pattern.compile(".+Exception.+");
     private static Pattern stackTracePattern = Pattern.compile("\\tat.+");
-    private static Set<LoggedException> loggedExceptions = new HashSet<>();
+    private static Map<LoggedException, Integer> loggedExceptions = new HashMap<>();
 
     public static void parseLog(File file) throws FileNotFoundException {
         Scanner logFileScanner = new Scanner(file);
@@ -29,15 +29,42 @@ public class Main {
                 if(stackTraceMatcher.find()){
                     loggedException.getStackTrace().add(stackTraceMatcher.group());
                 } else {
-                    loggedExceptions.add(loggedException);
+                    if(loggedExceptions.containsKey(loggedException)){
+                        int count = loggedExceptions.get(loggedException);
+                        loggedExceptions.put(loggedException, ++count);
+                    } else {
+                        loggedExceptions.put(loggedException, 1);
+                    }
                     searchForName=true;
                 }
             }
         }
     }
 
+    public static void generateLogReport() throws FileNotFoundException {
+        File logDir = new File("src");
+        for(File logFile : logDir.listFiles()){
+            if(logFile.isFile()){
+                parseLog(logFile);
+                printReport(logFile.getName());
+                loggedExceptions.clear();
+            }
+        }
+    }
+
+    private static void printReport(String file) {
+        System.out.println("-------------------------------------------------------------------------");
+        System.out.println("Exception details for file: " + file);
+        for(Map.Entry<LoggedException, Integer> entry : loggedExceptions.entrySet()){
+            System.out.printf("Exception " + entry.getKey().getName() + " found " + entry.getValue() + " times. Following is the stack trace");
+            for(String trace : entry.getKey().getStackTrace()){
+                System.out.println(trace);
+            }
+        }
+        System.out.println("-------------------------------------------------------------------------");
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
-        parseLog(new File("src\\sample-log-file.log"));
-        System.out.println(loggedExceptions.size());
+        generateLogReport();
     }
 }

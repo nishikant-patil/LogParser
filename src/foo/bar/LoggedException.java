@@ -14,6 +14,10 @@ public class LoggedException {
         return stackTrace;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public LoggedException(String name){
         this.name = name;
     }
