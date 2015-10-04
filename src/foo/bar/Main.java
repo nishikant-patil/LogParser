@@ -41,8 +41,8 @@ public class Main {
         }
     }
 
-    public static void generateLogReport() throws FileNotFoundException {
-        File logDir = new File("src");
+    public static void generateLogReport(String logDirPath) throws FileNotFoundException {
+        File logDir = new File(logDirPath);
         for(File logFile : logDir.listFiles()){
             if(logFile.isFile()){
                 parseLog(logFile);
@@ -56,7 +56,7 @@ public class Main {
         System.out.println("-------------------------------------------------------------------------");
         System.out.println("Exception details for file: " + file);
         for(Map.Entry<LoggedException, Integer> entry : loggedExceptions.entrySet()){
-            System.out.printf("Exception " + entry.getKey().getName() + " found " + entry.getValue() + " times. Following is the stack trace");
+            System.out.println("Exception " + entry.getKey().getName() + " found " + entry.getValue() + " times. Following is the stack trace");
             for(String trace : entry.getKey().getStackTrace()){
                 System.out.println(trace);
             }
@@ -64,7 +64,7 @@ public class Main {
         System.out.println("-------------------------------------------------------------------------");
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        generateLogReport();
+    public static void main(String... args) throws FileNotFoundException {
+        generateLogReport(args.length==0 ? "src" : args[0]);
     }
 }
