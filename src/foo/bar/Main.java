@@ -12,17 +12,6 @@ public class Main {
     private static Pattern stackTracePattern = Pattern.compile("\\tat.+");
     private static Set<LoggedException> loggedExceptions = new HashSet<>();
 
-
-    public static void generateExceptionLog(){
-        try {
-            System.out.println("Hello world-start");
-            System.out.println(1 / 0);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        System.out.println("Hello world-end");
-    }
-
     public static void parseLog(File file) throws FileNotFoundException {
         Scanner logFileScanner = new Scanner(file);
         boolean searchForName = true;
