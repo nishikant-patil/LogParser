@@ -13,29 +13,30 @@ public class Main {
     private static Map<LoggedException, Integer> loggedExceptions = new HashMap<>();
 
     public static void parseLog(File file) throws FileNotFoundException {
-        Scanner logFileScanner = new Scanner(file);
-        boolean searchForName = true;
-        LoggedException loggedException = null;
-        while(logFileScanner.hasNext()){
-            String line = logFileScanner.nextLine();
-            if(searchForName){
-                Matcher nameMatcher = expNamePattern.matcher(line);
-                if(nameMatcher.find()){
-                    loggedException = new LoggedException(nameMatcher.group());
-                    searchForName = false;
-                }
-            } else {
-                Matcher stackTraceMatcher = stackTracePattern.matcher(line);
-                if(stackTraceMatcher.find()){
-                    loggedException.getStackTrace().add(stackTraceMatcher.group());
-                } else {
-                    if(loggedExceptions.containsKey(loggedException)){
-                        int count = loggedExceptions.get(loggedException);
-                        loggedExceptions.put(loggedException, ++count);
-                    } else {
-                        loggedExceptions.put(loggedException, 1);
+        try(Scanner logFileScanner = new Scanner(file)) {
+            boolean searchForName = true;
+            LoggedException loggedException = null;
+            while (logFileScanner.hasNext()) {
+                String line = logFileScanner.nextLine();
+                if (searchForName) {
+                    Matcher nameMatcher = expNamePattern.matcher(line);
+                    if (nameMatcher.find()) {
+                        loggedException = new LoggedException(nameMatcher.group());
+                        searchForName = false;
                     }
-                    searchForName=true;
+                } else {
+                    Matcher stackTraceMatcher = stackTracePattern.matcher(line);
+                    if (stackTraceMatcher.find()) {
+                        loggedException.getStackTrace().add(stackTraceMatcher.group());
+                    } else {
+                        if (loggedExceptions.containsKey(loggedException)) {
+                            int count = loggedExceptions.get(loggedException);
+                            loggedExceptions.put(loggedException, ++count);
+                        } else {
+                            loggedExceptions.put(loggedException, 1);
+                        }
+                        searchForName = true;
+                    }
                 }
             }
         }
